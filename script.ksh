@@ -1,3 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 
-echo "script.ksh just ran!"
+curdate=$(date)
+echo "############# script.ksh just ran @ ######## ${curdate} ############"
