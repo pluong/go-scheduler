@@ -1,2 +1,2 @@
 # go-scheduler
-A distributed scheduler in Go.  This is still a work in progress.
+A scheduler in written in Go using Redis as a distributed lock.
