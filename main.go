@@ -16,7 +16,7 @@ import (
 func main() {
 	script := flag.String("script", "./script.ksh", "script that will be triggered")
 	redisServer := flag.String("redis", "192.168.0.139:6379", "redis instance")
-	cronInput := flag.String("cron", "5,10,15,20,25,30,35,40,45,50,55 * * * *", "cron expression")
+	cronInput := flag.String("cron", "0,5,10,15,20,25,30,35,40,45,50,55 * * * *", "cron expression")
 
 	flag.Parse()
 
@@ -31,15 +31,8 @@ func main() {
 	c.Start()
 
 	for {
-		select {
-		// case <-cancel:
-		// 	fmt.Println("Scheduler has Stopped!")
-		// 	c.Stop()
-		default:
-			fmt.Println("---------------- tick --------- ", time.Now().Format(time.ANSIC), "\n")
-			time.Sleep(1 * time.Second)
-		}
-
+		fmt.Println("---------------- tick --------- ", time.Now().Format(time.ANSIC))
+		time.Sleep(1 * time.Second)
 	}
 
 }
@@ -65,7 +58,7 @@ func getMutexAndExec(redisServer string, script string, c chan bool) {
 	// Obtain a lock for our given mutex. After this is successful, no one else
 	// can obtain the same lock (the same mutex name) until we unlock it.
 	if err := mutex.Lock(); err != nil {
-		fmt.Println("!!! Lock is not available !!!")
+		fmt.Println("!!!! Lock is not available !!!!!", time.Now().Format(time.ANSIC))
 		c <- true
 		return
 		// panic(err)
@@ -75,7 +68,6 @@ func getMutexAndExec(redisServer string, script string, c chan bool) {
 
 	// Do your work that requires the lock.
 	executeScript(script)
-	time.Sleep(2 * time.Second)
 
 	// Release the lock so other processes or threads can obtain a lock.
 	if ok, err := mutex.Unlock(); !ok || err != nil {
